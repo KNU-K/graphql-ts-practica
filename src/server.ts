@@ -1,21 +1,7 @@
-import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@apollo/server/express4";
-import express from "express";
 import http from "http";
-import createApp from "./app";
+import createApp from "./graphql/app";
 
-const typeDefs = `#graphql
-  type Query {
-    hello: String
-  }
-`;
-
-const resolvers = {
-    Query: {
-        hello: () => "world",
-    },
-};
-
+/**This Server is based GraphQL  */
 (async function startServer() {
     const app = await createApp();
     const httpServer = http.createServer(app);

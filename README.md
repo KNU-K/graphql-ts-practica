@@ -22,7 +22,9 @@
 
 `GraphQL`과 `SQL`은 같은 Query Language이다. 간단히 말해서 질의형으로 요청하여 필요에 따른 응답을 받을 수 있는 것이다.
 
-## 😊 ch1. Query를 통해 데이터를 가져오기 (Hello world)
+## 😊 ch1. Query를 통해 데이터를 가져오기
+
+### hello world를 해보자
 
 ```tsx
 import express, { Application } from "express";
@@ -68,3 +70,71 @@ query : "query { hello }"
 ```
 
 라는 형식의 쿼리를 json 형식으로 보내게 되면, 일반 Rest API와 같은 JSON형태로 응답을 받을 수 있게 된다. 해당 테스트는 이에 대한 부분을 직관적으로 확인할 수 있도록 구성했다..
+
+😊 ch2. 간단하게 RestAPI 와 GraphQL 간의 비교
+
+초기 챕터에서는 database를 사용하지않고 practice에 대해서 소개하려고 한다.
+
+#### 🚩초기 시나리오 구성
+
+프로필 정보, 게시물, 댓글을 프론트에서 요청이 필요로 할 때:
+
+-   REST API : 프로필 정보, 게시물, 댓글에 대한 요청을 따로 구성한다.
+-   GraphQL : Query 기반으로 한번에 요청으로 가능하게 할 수 있다.
+
+#### 🏴REST API로 구성
+
+`/api/profile`
+`/api/board/:id`
+`/api/comment`
+로 구성할 것이다. 현재는 인증하는 것이 목적이 아니기 때문에, 인증부 없이 무조건적으로 1번user의 profile을 주도록 하겠다.
+
+#### 🏳️GraphQL로 구성
+
+```graphQL
+query {
+    userProfile(id: 1) {
+        id
+        name
+        email
+        age
+        phone
+    }
+    getBoard(id:1){
+        postId
+        userId
+        title
+        content
+        timestamp
+    }
+    getComment(boardId:1){
+        commentId
+        postId
+        userId
+        content
+        timestamp
+    }
+}
+```
+
+해당 쿼리를 통해 한번에 접근 가능, 해당 부분에서도 설명에 불필요한 내용은 제외하여 진행했다.
+
+#### ✅ 간단한 비교 분석
+
+##### : 클라이언트가 원하는 응답을 준비할 수 있는 graphQL
+
+`Rest API` 는 서버가 구성하고 있는 형태를 클라이언트에 필요에 따라 변경하려면 새로운 api 를 구성해야하는 번거러움이 존재할 수 있다.
+
+하지만, `GraphQL`의 경우에는 그 때 그때 필요한 인자만을 받을 수 있기 때문에, 응답을 받는 것에 자유롭다.
+
+##### : 과연 응답 속도가 정말 빠를까? 실제 실험을 해보자
+
+`Rest API` 와 `GraphQL`에서 요청에 따른 속도 차이가 나타날 수도 있다고 했는데, 정말인지 확인하기 위해서 동일 서버 스펙에서 총 5번의 테스트를 진행해봤다.
+
+`npm test perform`을 통해서 이를 확인할 수 있다!
+
+<img src="./images/image.png" alt="nop" width="300" />
+
+perform에 대한 test를 진행한 결과 1.3 ~ 1.7 배 더 빠른 것으로 측정되었다. 이렇게 한 번에 많은 요청량이 client가 필요로 한다고 생각하면 편할 것이다.
+
+> 많은 클라이언트는 하나의 페이지 단위에 여러 데이터를 얻기 위한 서로 다른 api요청을 반복한다.
