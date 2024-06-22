@@ -71,7 +71,7 @@ query : "query { hello }"
 
 라는 형식의 쿼리를 json 형식으로 보내게 되면, 일반 Rest API와 같은 JSON형태로 응답을 받을 수 있게 된다. 해당 테스트는 이에 대한 부분을 직관적으로 확인할 수 있도록 구성했다..
 
-😊 ch2. 간단하게 RestAPI 와 GraphQL 간의 비교
+## 😊 ch2. 간단하게 RestAPI 와 GraphQL 간의 비교
 
 초기 챕터에서는 database를 사용하지않고 practice에 대해서 소개하려고 한다.
 
