@@ -16,7 +16,7 @@ describe("✅ RestAPI test", () => {
         const reviewRes = await request(app).get("/api/review/1");
         expect(userRes.status).toBe(200);
         expect(userRes.body).toHaveProperty("id");
-        expect(userRes.body).toHaveProperty("name");
+        expect(userRes.body).toHaveProperty("naddme");
         expect(userRes.body).toHaveProperty("email");
         expect(userRes.body).toHaveProperty("age");
         expect(userRes.body).toHaveProperty("phone");
