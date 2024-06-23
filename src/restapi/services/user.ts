@@ -7,6 +7,6 @@ export default class UserService {
     getUserReviewByUserId = async (userId: number) => {
         return dummydata2.reviewDummy
             .map(({ score, ...rest }) => rest)
-            .find((review) => review.userId === userId);
+            .filter((review) => review.userId === userId);
     };
 }
