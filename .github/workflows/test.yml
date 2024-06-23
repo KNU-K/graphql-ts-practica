@@ -6,7 +6,7 @@ on:
             - main # 푸시된 코드가 main 브랜치일 때만 실행
 
 jobs:
-    test:
+    graphql-rest-api-test:
         runs-on: ubuntu-latest
 
         steps:
