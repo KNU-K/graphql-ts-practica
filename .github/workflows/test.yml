@@ -3,7 +3,7 @@ name: Node.js CI
 on:
     push:
         branches:
-            - main # 푸시된 코드가 main 브랜치일 때만 실행
+            - "*" # 푸시된 코드가 main 브랜치일 때만 실행
 
 jobs:
     graphql-rest-api-test:
