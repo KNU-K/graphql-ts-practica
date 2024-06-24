@@ -159,8 +159,8 @@ GraphQL이 Rest API의 Under-Fetching과 Over-Fetching 같은 상황을 얼마�
 
 여기서 필요한 부분을 추출해보면 아래와 같다.
 
--   ## RestAPI
-    -   유저 전체 정보 - `/api/user
+-   RestAPI
+    -   유저 전체 정보 - `/api/user`
     -   유저 프로필 정보 - `/api/user/:userId`
     -   사용자 리뷰 목록 - `/api/user/:userId/review`
     -   리뷰 상세 정보 - `/api/review/:reviewId`
