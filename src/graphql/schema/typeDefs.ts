@@ -15,7 +15,8 @@ type Review {
 }
 
 type Query {
-    user(id: Int!): User
+    user(id: Int): User
+    users: [User]
     userReviews(userId: Int!): [Review]
     review(id: Int!): Review
 }

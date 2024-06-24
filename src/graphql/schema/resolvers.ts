@@ -4,6 +4,7 @@ export default {
     Query: {
         user: (_: any, { id }: { id: number }) =>
             dummydata2.userDummy.find((user) => user.id === id),
+        users: () => dummydata2.userDummy,
         userReviews: (_: any, { userId }: { userId: number }) =>
             dummydata2.reviewDummy.filter((review) => review.userId === userId),
         review: (_: any, { id }: { id: number }) =>

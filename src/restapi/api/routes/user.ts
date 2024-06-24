@@ -7,6 +7,9 @@ export default (router: Router) => {
     router.use("/user", route);
     /**this section is /api/user routing section */
 
+    route.get("/", async (req: Request, res: Response, next: NextFunction) => {
+        return res.status(200).json(await userService.getUsers());
+    });
     route.get("/:userId", async (req: Request, res: Response, next: NextFunction) => {
         const userId = parseInt(req.params.userId);
         return res.status(200).json(await userService.getUserByUserId(userId));
