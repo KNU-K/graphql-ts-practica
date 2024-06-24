@@ -55,7 +55,7 @@ describe("📈Over-Fetching Test", () => {
             expect(response.body).toHaveProperty("data");
             expect(response.body.data).toHaveProperty("users");
             const users = response.body.data.users;
-            expect(users).toHaveLength(43);
+            expect(users).toHaveLength(100);
             expect(users[0]).toHaveProperty("id");
             expect(users[0]).toHaveProperty("name");
             expect(users[0]).toHaveProperty("email");
@@ -79,7 +79,7 @@ describe("📈Over-Fetching Test", () => {
             expect(response.body).toHaveProperty("data");
             expect(response.body.data).toHaveProperty("users");
             const users = response.body.data.users;
-            expect(users).toHaveLength(43);
+            expect(users).toHaveLength(100);
             expect(users[0]).not.toHaveProperty("age");
             expect(users[0]).not.toHaveProperty("phone");
         });
