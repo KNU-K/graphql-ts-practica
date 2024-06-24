@@ -1,5 +1,5 @@
 import request from "supertest";
-import createApp from "../src/graphql/app";
+import createApp from "../../../src/graphql/app";
 import { Application } from "express";
 import { performance } from "perf_hooks";
 

@@ -139,7 +139,7 @@ perform에 대한 test를 진행한 결과 1.3 ~ 1.7 배 더 빠른 것으로 �
 
 ## 😊 ch3. Under-Fetching과 Over-Fetching에 대한 사례와 GraphQL을 통한 극복
 
-### ⬇️ Under-Fetching
+### ⬇️ Under-Fetching & 📈 Over-Fetching
 
 GraphQL이 Rest API의 Under-Fetching과 Over-Fetching 같은 상황을 얼마나 잘 극복하는지에 대해서 소개하려고 한다.
 
@@ -151,9 +151,16 @@ GraphQL이 Rest API의 Under-Fetching과 Over-Fetching 같은 상황을 얼마�
 
 여행 리뷰 웹사이트에서 사용자의 프로필 정보를 포함한 특정 사용자의 작성한 리뷰 목록을 클라이언트에서 요청하는 상황을 고려해보자. 사용자는 여러 리뷰를 작성할 수 있으며, 각 리뷰에는 작성자의 정보가 포함되어 있다.
 
-여기서 필요한 부분을 추출해보자
+#### 🚩Over-Fetching 시나리오
 
--   RestAPI
+현재 웹에서 사용자에 대한 기본 정보 (이름과 이메일)만을 보여주려고 한다. 해당 사항을 고려해보자.
+
+#### 🗂️ 요구사항에 따른 필요 요소 추출
+
+여기서 필요한 부분을 추출해보면 아래와 같다.
+
+-   ## RestAPI
+    -   유저 전체 정보 - `/api/user
     -   유저 프로필 정보 - `/api/user/:userId`
     -   사용자 리뷰 목록 - `/api/user/:userId/review`
     -   리뷰 상세 정보 - `/api/review/:reviewId`
@@ -163,26 +170,27 @@ GraphQL이 Rest API의 Under-Fetching과 Over-Fetching 같은 상황을 얼마�
 
         ```tsx
         export default `#graphql
-        type User {
-            id: Int!
-            name: String!
-            email: String!
-            reviews: [Review]
-        }
+            type User {
+                id: Int!
+                name: String!
+                email: String!
+                reviews: [Review]
+            }
         
-        type Review {
-            reviewId: Int!
-            content: String!
-            score: Int!
-            timestamp: String!
-            author: User
-        }
+            type Review {
+                reviewId: Int!
+                content: String!
+                score: Int!
+                timestamp: String!
+                author: User
+            }
         
-        type Query {
-            user(id: Int!): User
-            userReviews(userId: Int!): [Review]
-            review(id: Int!): Review
-        }
+            type Query {
+                user(id: Int): User
+                users: [User]
+                userReviews(userId: Int!): [Review]
+                review(id: Int!): Review
+            }
         `;
         ```
 
@@ -212,22 +220,29 @@ GraphQL이 Rest API의 Under-Fetching과 Over-Fetching 같은 상황을 얼마�
         -   index.ts
     -   app.ts
 
-#### ⏳ Performance 비교 분석 및 성능에 대한 차이가 있는 이유
+#### 💫performance
 
-##### 💫performance
+-   Under-Fetching
 
-| Test Description    | REST API Performance (ms)                  | GraphQL API Performance (ms)                |
-| ------------------- | ------------------------------------------ | ------------------------------------------- |
-| Measure Performance | 38.17                                      | 14.33                                       |
-| Image Data          | ![alt text](./images/ch3-rest-perform.png) | ![alt text](./images/ch3-graph-perform.png) |
+    | Test Description    | REST API Performance (ms)                  | GraphQL API Performance (ms)                |
+    | ------------------- | ------------------------------------------ | ------------------------------------------- |
+    | Measure Performance | 38.17                                      | 14.33                                       |
+    | Image Data          | ![alt text](./images/ch3-rest-perform.png) | ![alt text](./images/ch3-graph-perform.png) |
+
+-   Over-Fetching
+
+    | Test Description    | REST API Performance (ms)                   | GraphQL API Performance (ms)                 |
+    | ------------------- | ------------------------------------------- | -------------------------------------------- |
+    | Measure Performance | 9.13                                        | 20.4                                         |
+    | Image Data          | ![alt text](./images/ch3-rest-perform2.png) | ![alt text](./images/ch3-graph-perform2.png) |
 
 `npm test perform`을 통해 성능을 측정해볼 수 있을 것이다.
 
-##### 💫성능에 대한 차이가 존재하는 이유
+#### 💫성능에 대한 차이가 존재하는 이유
 
-간단하게 예시를 들어주겠다. 이 것은 마치 Buffering 개념과 비슷하다. 계란을 가지고 올 때, `바구니를 가지고 한번에 가져오는 것`과 `1개씩 왔다갓다 하면서 가져 오는 것` 딱 GraphQL과 Rest API는 이 차이이다.
+간단하게 예시를 들어주겠다. 이 것은 마치 Buffering 개념과 비슷하다. 계란을 가지고 올 때, `바구니를 가지고 한번에 가져오는 것`과 `1개씩 왔다갔다 하면서 가져 오는 것` 딱 GraphQL과 Rest API는 해당 예시와 같은 차이가 난다.
 
-Under-Fetching의 경우는 REST API 에서 필요로 하는 데이터를 얻기 위해서는 여러번의 요청이 필요한 것이다. 결국 동일한 데이터를 얻는다고 가정하면 `왔다 갔다거리는 수고`만 더 추가 된 것이다.
+**_Under-Fetching의 경우_** 는 REST API 에서 필요로 하는 데이터를 얻기 위해서는 여러번의 요청이 필요한 것이다. 결국 동일한 데이터를 얻는다고 가정하면 `왔다 갔다거리는 수고`만 더 추가 된 것이다.
 
 이 것이 간단히 말해 성능차이에 큰 요인이 된 것이다.
 
@@ -240,3 +255,19 @@ Under-Fetching의 경우는 REST API 에서 필요로 하는 데이터를 얻기
 3. 네트워크 트래픽 감소(단일 요청으로 데이터를 얻을 수 있기 때문에)
 
 이러한, 이 점은 오히려 다양한 서비스를 만드는데 큰 도움을 줄 것이라 확신한다.
+
+**Over-Fetching 예제의 경우**는 graphql에서 `오버헤드`가 발생하는 좋은 사례라고 생각한다.
+
+> 다른 사람들: 방금까지만해도 GraphQl이 좋다고 했잖아요!
+
+> **물론이다. 하지만 오버헤드를 고려해야한다.**
+
+여기서 잠깐 주목하면 좋은 점은 Response Size이다. GraphQL이 Rest API 보다 훨씬 적다. 현재 실험 자체는 Local에서 진행했지만, 여러 remote 통신이 있을 때 Response Size가 낮은 즉, "대역폭"이 낮은 GraphQL이 유리해질 수 있다.
+
+#### GraphQL의 오버헤드가 발생하는 이유
+
+GraphQL에서 오버헤드가 발생하는 이유는 쿼리를 통한 질의나 요구에 맞게 데이터 해석과정을 거치기 때문에 응답할 데이터를 만들어내는데까지 시간이 오래걸리는 것이다.
+
+이를 쿼리 최적화, Resolver 최적화 등과 같은 방법으로 해소할 수 있다. 이는 추후 챕터에서 소개할 예정이다.
+
+지금까지의 내용으로 알았으면 좋겠는 점은 서로간의 **트레이드 오프**가 분명 존재한다는 것이다.
